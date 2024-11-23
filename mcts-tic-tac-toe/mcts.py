@@ -35,13 +35,15 @@ class MCTSNode(ABC):
 
 
 class MCTS:
-  def __init__(self):
+  def __init__(self, exploration_weight: float = 1):
     # total reward of each node
     self.Q: dict[MCTSNode, float] = defaultdict(float)
     # total visit count for each node
     self.N: dict[MCTSNode, int] = defaultdict(int)
     # children of each node
     self.children: dict[MCTSNode, set[MCTSNode]] = dict()
+    # exploration weight used in UCT (Upper Confidence Bound for Trees)
+    self.exploration_weight = exploration_weight
   
   def choose(self, node: MCTSNode) -> MCTSNode:
     "Choose the best successor of the node. (Choose a move in the game)"
@@ -123,7 +125,7 @@ class MCTS:
 
     def uct(n: MCTSNode) -> float:
       "Upper confidence bound for trees"
-      return self.Q[n] / self.N[n] + math.sqrt(log_N_parent / self.N[n])
+      return self.Q[n] / self.N[n] + self.exploration_weight * math.sqrt(log_N_parent / self.N[n])
 
     # choose the child with the highest UCT value
     return max(self.children[node], key=uct)
