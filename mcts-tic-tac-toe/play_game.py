@@ -1,7 +1,7 @@
 from mcts import MCTS
 from tictactoe import Piece, TicTacToeBoard, row_col_to_index
 
-def play_game(num_rollouts: int = 50):
+def play_game(num_rollouts: int = 200):
   tree = MCTS()
   board = TicTacToeBoard.new()
 
@@ -23,7 +23,7 @@ def play_game(num_rollouts: int = 50):
       break
     
     # You can train as you go, or only at the beginning.
-    # Here, we train as we go, doing fifty rollouts each turn.
+    # Here, we train as we go, doing `num_rollouts` rollouts each turn.
     for _ in range(num_rollouts):
       tree.rollout(board)
     
